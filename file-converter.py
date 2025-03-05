@@ -23,7 +23,9 @@ if files:
             st.dataframe(df.head())
 
             if st.checkbox(f"File Missing values - {file.name}"):
-                df = fileno(df.select_dtypes(include=["number"]).mean(), inplace=True)
+                # df = fileno(df.select_dtypes(include=["number"]).mean(), inplace=True)
+                df.fillna(df.select_dtypes(
+                    include=["number"]).mean(), inplace=True)
                 st.success("Missing Values filled with mean")
                 st.dataframe(df.head())
 
@@ -33,7 +35,7 @@ if files:
             st.dataframe(df.head())
 
             if st.checkbox(f"Show Chart - {file.name}") and not df.select_dtypes(include="number").empty:
-                st.barchart(df.select_dtypes(include="number").iloc[:, :2])
+                st.bar_chart(df.select_dtypes(include="number").iloc[:, :2])
 
             format_choice = st.radio(f"Convert{file.name} to:", [
                                      "csv", "Excel"], key=file.name)
@@ -41,16 +43,17 @@ if files:
             if st.button(f"Download {file.name} as {format_choice}"):
                 output = BytesIO()
                 if format_choice == "csv":
-                    df.to_csv("text/csv")
+                    # df.to_csv("text/csv")
+                    df.to_csv(output, index=False)
                     new_name = file.name.replace(ext, "csv")
 
                 else:
                     df.to_excel(output, index=False, engine="openpyxl")
-                    mine = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     new_name = file.name.replace(ext, "xlsx")
 
                     output.seek(0)
                     st.download_button(
-                        "Download file", file_name=new_name, data=output, mime=mine)
+                        "Download file", file_name=new_name, data=output, mime=mime)
 
                 st.success("Processing Complete!")
