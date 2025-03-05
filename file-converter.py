@@ -1,13 +1,11 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
-import openpyxl
-print(openpyxl.__version__)
 
 
 st.set_page_config(page_title="File Converter", layout="wide")
 st.title("File Converter & Cleaner")
-st.write("Upload ssv or excel files, clean data, & convert formats.")
+st.write("Upload csv or excel files, clean data, & convert formats.")
 
 files = st.file_uploader("upload CSV or Excel Files.", type=[
                          "csv", "xlsx"], accept_multiple_files=True)
